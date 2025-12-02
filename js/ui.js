@@ -43,8 +43,8 @@ function convertYouTubeToEmbed(messageText) {
     } */
 
     // Mesaj içinde link geçiyorsa linki iframe ile değiştir
-    //return messageText.replace(youtubeRegex, iframe.trim());
-    return iframe;
+    return messageText.replace(youtubeRegex, iframe.trim());
+    //return iframe;
 }
 
 // Her yeni mesajda ekrana mesajı basıp, localStorage da aynı mesajı saklıyoruz.
@@ -370,3 +370,4 @@ $(function () {
     // User data check
     UserDataCheck();
 });
+
