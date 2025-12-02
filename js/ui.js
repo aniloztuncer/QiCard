@@ -21,8 +21,10 @@ function convertYouTubeToEmbed(messageText) {
         return `
             <iframe 
                 id="video"
-                src="${url}" 
+                src="${url}"
+                sandbox="allow-scripts allow-popups allow-same-origin"
                 frameborder="0"
+                height="315"
                 allowfullscreen>
             </iframe>
         `;
@@ -364,5 +366,6 @@ $(function () {
     // User data check
     UserDataCheck();
 });
+
 
 
