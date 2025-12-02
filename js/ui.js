@@ -16,47 +16,42 @@ function convertYouTubeToEmbed(messageText) {
     // YouTube tüm URL formatlarını yakala
     const youtubeRegex = /<a[^>]+href="(https?:\/\/(?:www\.)?youtube\.com\/embed\/[A-Za-z0-9_-]+)"[^>]*>.*?<\/a>/g;
 
-    const match = messageText.match(youtubeRegex);
-
-    //console.log("match text:" + match);
-
-    // Link yoksa mesajı aynen döndür
-    if (!match) return messageText;
-
-    const videoId = match[0];
-    const iframe = `
-        <iframe 
-            id="video"
-            sandbox="allow-scripts allow-popups allow-same-origin"
-            width="560" 
-            height="315" 
-            src="${videoId}" 
-            frameborder="0"
-            allowfullscreen>
-        </iframe>
-    `;
-
-    /* Eğer mesaj sadece linkten ibaretse direkt iframe döndür
-    if (messageText.trim() === match[0].trim()) {
-        return iframe.trim();
-    } */
-
-    // Mesaj içinde link geçiyorsa linki iframe ile değiştir
-    return messageText.replace(youtubeRegex, iframe.trim());
-    //return iframe;
+    // Mesajdaki tüm linkleri iframe ile değiştir
+    return messageText.replace(youtubeRegex, (match, url) => {
+        return `
+            <iframe 
+                id="video"
+                src="${url}" 
+                frameborder="0"
+                allowfullscreen>
+            </iframe>
+        `;
+    });
 }
 
 // Her yeni mesajda ekrana mesajı basıp, localStorage da aynı mesajı saklıyoruz.
 function addNewMessage(messageType, messageText, messageTime) {
     messageText = convertYouTubeToEmbed(messageText);
-    console.log("converted message text:" + messageText);
-    var newMessageHTML = '<div class="cx-message cx-message-' + messageType + '"> <div class="cx-message-icon"><div class="icon-image"></div><div class="icon-text">Glamira</div></div> <div class="cx-message-body"> <div class="cx-message-text">' + messageText + '</div> <div class="cx-message-time">' + messageTime + '</div> </div> </div>';
+    console.log("converted message text:", messageText);
+
+    var newMessageHTML = `
+        <div class="cx-message cx-message-${messageType}"> 
+            <div class="cx-message-icon">
+                <div class="icon-image"></div>
+                <div class="icon-text">Glamira</div>
+            </div> 
+            <div class="cx-message-body"> 
+                <div class="cx-message-text">${messageText}</div> 
+                <div class="cx-message-time">${messageTime}</div> 
+            </div> 
+        </div>
+    `;
 
     cxMessages.append(newMessageHTML);
     scroolToBottom();
 
     // LocalStorage da chat geçmişini tutuyoruz.
-    var cxChatHistory = localStorage.getItem("cxChatHistory");
+    var cxChatHistory = localStorage.getItem("cxChatHistory") || "";
     localStorage.setItem("cxChatHistory", cxChatHistory + newMessageHTML);
 }
 
@@ -369,4 +364,5 @@ $(function () {
     // User data check
     UserDataCheck();
 });
+
 
