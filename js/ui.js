@@ -14,8 +14,7 @@ function convertYouTubeToEmbed(messageText) {
     if (!messageText) return messageText;
 
     // YouTube tüm URL formatlarını yakala
-    const youtubeRegex = /https?:\/\/(?:www\.)?youtube\.com\/embed\/[A-Za-z0-9_-]+/g;
-    // /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?[^ ]*v=|youtu\.be\/)([A-Za-z0-9_-]{11})/;
+    const youtubeRegex = /<a[^>]+href="(https?:\/\/(?:www\.)?youtube\.com\/embed\/[A-Za-z0-9_-]+)"[^>]*>.*?<\/a>/g;
 
     const match = messageText.match(youtubeRegex);
 
@@ -24,7 +23,7 @@ function convertYouTubeToEmbed(messageText) {
     // Link yoksa mesajı aynen döndür
     if (!match) return messageText;
 
-    const videoId = match[1];
+    const videoId = match[0];
     const iframe = `
         <iframe 
             id="video"
@@ -370,4 +369,5 @@ $(function () {
     // User data check
     UserDataCheck();
 });
+
 
