@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1D1A26">
+    <meta name="msapplication-navbutton-color" content="#1D1A26">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#1D1A26">
+    <title>Web Chat - UI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin" rel="stylesheet">
+    <link href="css/general.css?v=1.0.1" rel="stylesheet">
+    <script src="js/cdn/jquery.min.js"></script>
+    <script src="js/cdn/i18next.min.js"></script>
+    <script src="js/cdn/i18next-jquery.min.js"></script>
+    <script src="js/cdn/i18nextXHRBackend.min.js"></script>
+</head>
+<body>
+    <div class="cx-container">
+        <div class="cx-header">
+            <div class="cx-header-icon">
+                <img src="img/logo.png" />
+            </div>
+            <div class="cx-header-text">
+                <div class="cx-header-title" data-i18n="title">Live Chat</div>
+                <div class="cx-header-subtitle" style="display: none;">
+                    <span id="agentStatusIcon" class="cx-agent-status-icon"></span>
+                    <span id="agentStatusText" class="cx-agent-status-text">We'll return to you within 2 minutes.</span>
+                </div>
+            </div>
+            <div class="cx-header-buttons">
+                <div id="btnChatMinimize" class="cx-button cx-minimize-button" data-i18n="[title]minimize-button" title="Minimize"></div>
+                <div id="btnChatExit" class="cx-button cx-close-button" data-i18n="[title]close-button" title="End Conversation"></div>
+            </div>
+        </div>
+        <div id="userForm" class="cx-user-form" style="display: none;">
+                <div class="form-header"></div>
+                <div class="form-content">
+                    <div class="form-control">
+                        <label class="form-label" for="txtUserName" data-i18n="user-form.name-label">Name / Surname:</label>
+                        <input class="form-input-text" id="txtUserName" type="text" data-i18n="[placeholder]user-form.name-placeholder" placeholder="Your Name" />
+                        <span id="userNameValidation" class="form-error" data-i18n="user-form.warning">Please enter your information correctly.</span>
+                    </div>
+                    <div class="form-control">
+                        <label class="form-label" for="txtEmail" data-i18n="user-form.email-label">E-Mail:</label>
+                        <input class="form-input-text" id="txtEmail" type="email" data-i18n="[placeholder]user-form.email-placeholder" placeholder="Your Email" />
+                        <span id="emailValidation" class="form-error" data-i18n="user-form.warning">Please enter your information correctly.</span>
+                    </div>
+                    <div class="form-control">
+                        <label class="form-label" for="txtStartMessage" data-i18n="user-form.message-label">Message:</label>
+                        <textarea class="form-input-textarea" id="txtStartMessage" data-i18n="[placeholder]user-form.message-placeholder"  placeholder="Your Message"></textarea>
+                    </div>
+                </div>
+                <div class="form-footer">
+                    <div class="other-sign-in"></div>
+                    <div class="start-button">
+                        <button id="btnSubmitForm" class="form-button" data-i18n="user-form.start-to-chat-button">START TO CHAT</button>
+                    </div>
+                </div>
+        </div>
+        <div id="cx-message-area" class="cx-message-area" style="display: none;">
+            <div class="cx-privacy-policy" data-i18n="[html]privacy-policy">
+                You can use the link below to request a report which <br>will contain all personal information that we store for you. <br><a href="https://www.qi.iq/privacy-policy/">www.qi.iq/privacy-policy/</a>
+            </div>
+            <div id="cx-messages" class="cx-messages">
+                <!--<div class="cx-message cx-message-system">
+                    <div class="cx-message-icon"></div>
+                    <div class="cx-message-body">
+                        <div class="cx-message-text">Görüşme başladı</div>
+                        <div class="cx-message-time">13:25</div>
+                    </div>
+                </div>
+                <div class="cx-message cx-message-agent">
+                    <div class="cx-message-icon">
+                        <div class="icon-image"></div>
+                        <div class="icon-text">QI.IQ</div>
+                    </div>
+                    <div class="cx-message-body">
+                        <div class="cx-message-text">Merhaba, size nasıl yardımcı olabilirim?</div>
+                        <div class="cx-message-time">13:26</div>
+                    </div>
+                </div>
+                <div class="cx-message cx-message-participant">
+                    <div class="cx-message-icon">
+                        <div class="icon-image"></div>
+                        <div class="icon-text">QI.IQ</div>
+                    </div>
+                    <div class="cx-message-body">
+                        <div class="cx-message-text">Merhaba, oturum açamıyorum. Yardımcı olabilir misiniz?</div>
+                        <div class="cx-message-time">13:26</div>
+                    </div>
+                </div>-->
+            </div>
+            <div class="cx-message-footer">
+                <div class="footer-buttons">
+                    <div id="typing" class="cx-typing" data-i18n="typing">Typing...</div>
+                    <div id="btnEmoji" style="display: none;" class="cx-button cx-emoji-button" data-i18n="[title]emoji-button" title="Emoji"></div>  
+                    <div id="uploading" class="cx-uploading" data-i18n="upload-status.uploading">Uploading...</div>
+                    <form id="upload_form" enctype="multipart/form-data" style="display:none">
+                        <input type="file" id="fileUpload"/> 
+                    </form>
+                    <div id="btnAttach" class="cx-button cx-attach-button" data-i18n="[title]attach-button" title="Attach"></div>
+                    <div id="btnSendMessage" class="cx-button cx-send-button" data-i18n="[title]send-button" title="Send"></div>
+                </div>
+                <div class="footer-text-area">
+                    <input type="text" autocomplete="off" id="txtMessage" class="cx-message-input"  data-i18n="[placeholder]message-placeholder" placeholder="Please write your message..." />
+                </div>
+            </div>
+        </div>   
+        <div id="surveyForm" class="cx-survey-form" style="display: none;">
+            <div class="form-header" data-i18n="survey.title">How easy was it to resolve your issue with us today?</div>
+                <div class="form-content">
+                    <div class="form-control">
+                        <label class="form-label" data-i18n="survey.rate-label">Rate this chat:</label>   
+                        <div class="radio-group">
+                            <input class="form-input-radio" id="chkRateGood" name="chkRate" value="good" type="radio" data-i18n="" /> 
+                            <label class="form-input-radio-label good" for="chkRateGood" data-i18n="survey.rate-good-label">Good</label>                        
+                            <input class="form-input-radio" id="chkRateBad" name="chkRate" value="bad" type="radio" data-i18n="" /> 
+                            <label class="form-input-radio-label bad" for="chkRateBad" data-i18n="survey.rate-bad-label">Bad</label>
+                        </div>                        
+                    </div>
+                    <div class="form-control">
+                        <label class="form-label" for="txtSurveyMessage" data-i18n="survey.comment-label">Add a comment (optional):</label>
+                        <textarea class="form-input-textarea" id="txtSurveyMessage" data-i18n="[placeholder]survey.comment-placeholder"  placeholder="Please write your message..."></textarea>
+                    </div>
+                </div>
+                <div class="form-footer">
+                    <div class="send-button">
+                        <button id="btnSendForm" class="form-button" data-i18n="survey.send-button">SEND</button>
+                    </div>
+                </div>
+        </div>   
+        <div id="surveyFeedback" class="cx-survey-feedback" style="display: none;">
+            <div class="cx-feedback-container">
+                <div class="cx-feedback-title" data-i18n="survey.feedback.title">Thanks for your time!</div>
+                <div class="cx-feedback-description" data-i18n="survey.feedback.description">Your feedback will help us improve.</div>
+                <div class="cx-feedback-footer"><button id="btnSurveyFeedbackClose" class="cx-feedback-button" data-i18n="survey.feedback.close-button">CLOSE</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="cx-modals cx-hidden">
+        <div class=" cx-modal cx-modal-exit cx-hidden">
+            <img class="modal-icon" src="img/logo.png">
+            <h3 class="modal-title" data-i18n="close-modal.title">End Conversation</h3>
+            <p class="modal-description" data-i18n="close-modal.message">The conversation will be ended. Do you want to continue the conversation?</p>
+            <button id="btnChatExitYes" class="modal-button" data-i18n="close-modal.ok-button">End Conversation</button>
+            <button id="btnChatExitNo" class="modal-button modal-button-active" data-i18n="close-modal.close-button">Continue Conversation</button>
+        </div>
+    </div>
+    <script src="js/base64.js"></script>
+    <script src="js/parameter.js"></script>
+    <script src="js/cookie.js"></script>
+    <script src="js/cammon.js"></script>
+    <script src="js/ui.js?v=1.0.2"></script>
+</body>
+</html>

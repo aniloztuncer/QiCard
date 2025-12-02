@@ -1,0 +1,58 @@
+{
+    "language-name": "Turkish",
+    "title": "Canlı Sohbet",
+    "subtitle": "",
+    "minimize-button": "Küçült",
+    "close-button": "Konuşmayı Sonlandır",
+    "privacy-policy": "Aşağıdaki linke tıklayarak gizlilik politikamız hakkında detaylı bilgi edinebilirsiniz. <a href='https://www.qi.iq/privacy-policy/' target='_blank'>www.qi.iq/privacy-policy/</a>",
+    "message-placeholder": "Mesajınızı girin...",
+    "typing": "Yazıyor...",
+    "upload-status": {
+        "uploading": "Dosya yükleniyor...",
+        "uploaded": "Dosya yüklendi.",
+        "max-file": "Max dosya eklendi.",
+        "max-size": "Dosya boyutu çok büyük.",
+        "no-file": "Yüklenecek dosya yok.",
+        "error": "Dosya yüklenirken hata oluştu!"
+    },
+    "emoji-button": "Sebmol ekle",
+    "attach-button": "Dosya ekle",
+    "send-button": "Gönder",
+    "user-form": {
+        "name-label": "İsim / Soyisim:",
+        "name-placeholder": "İsminiz",
+        "email-label": "E-Posta:",
+        "email-placeholder": "Eposta adresiniz",
+        "message-label": "Mesaj:",
+        "message-placeholder": "Mesajınız",
+        "start-to-chat-button": "SOHBETİ BAŞLAT",
+        "warning": "Lütfen bilgilerini kontrol ediniz."
+    },
+    "survey": {
+        "title": "Sorununuzu çözmek sizin için ne derece kolay oldu?",
+        "rate-label": "Sohbeti değerlendir:",
+        "rate-good-label": "İyi",
+        "rate-bad-label": "Kötü",
+        "comment-label": "Yorum ekle (isteğe bağlı):",
+        "comment-placeholder": "Mesajınızı girin...",
+        "send-button": "GÖNDER",
+        "feedback" : {
+            "title": "Vakit ayırdığınız için teşekkürler.",
+            "description": "Geri bildiriminiz, gelişmemize katkı sağlayacaktır.",
+            "close-button": "KAPAT"
+        }
+    },
+    "close-modal": {
+        "title": "Konuşmayı Sonlandır",
+        "message": "Konuşma sonlandırılacak. Konuşmaya devam etmek istiyor musunuz?",
+        "ok-button": "Konuşmayı Sonlandır",
+        "close-button": "Konuşmaya Devam Et"
+    },
+    "system-message": {
+        "agent-connected": "Müşteri temsilcisi görüşmeye katıldı",
+        "agent-disconnected": "Müşteri temsilcisi görüşmeden ayrıldı",
+        "agent-start-message": "Merhaba, size nasıl yardımcı olabilirim?",
+        "chat-started": "Görüşme başlatıldı",
+        "chat-ended": "Görüşme sonlandırıldı!"
+    }
+}
