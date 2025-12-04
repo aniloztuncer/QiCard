@@ -38,7 +38,7 @@
     Genesys("subscribe", "Messenger.ready", function () {
     
       const observer = new MutationObserver(() => {
-        document.querySelectorAll(".cx-message-text a").forEach(link => {
+        document.querySelectorAll("a[href*='youtube.com']").forEach(link => {
           const url = link.href;
     
           // Detect YouTube embed links
