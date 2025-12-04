@@ -2,7 +2,7 @@
 var deployementId = "21d8b1f2-0ff4-4e4b-947b-ed49de2fd36f"; // "ea702c5a-242a-4446-adfc-1ddf9a4fc71c";
 var wssUrl = "wss://webmessaging.mypurecloud.de/v1?deploymentId=" + deployementId;
 var apiUrl = "https://api.mypurecloud.de";
-var token = "guest_20250115011236_00000001";  // guest_20250115011236_00000001 (Burada her müşteri için uniq bir uuid değeri olmalıdır.)
+var token = setupUuid(); //"guest_20250115011236_00000001";  // guest_20250115011236_00000001 (Burada her müşteri için uniq bir uuid değeri olmalıdır.)
 var conversationId = null;
 var firstMessage = null;
 var jwtToken = null;
@@ -11,6 +11,14 @@ var webSocket;
 function startNewChat(_startMessage) {
     firstMessage = _startMessage;
     startConnection(wssUrl); // Wss bağlantısını yapıyoruz   
+}
+
+function setupUuid(){
+    const params = new URLSearchParams(window.location.search);
+
+    const uuidParam = params.get("uuid");
+
+    console.log("Captured UUID: " + uuidParam);
 }
 
 // _startNew default olarak false gönderilmelidir, sadece SessionResponse readOnly = true ise _startNew = true olarak gönderilmelidir
@@ -344,6 +352,7 @@ function linkify(inputText) {
     return replacedText;
 
 }
+
 
 
 
