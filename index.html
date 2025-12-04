@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QiBot</title>
+
+<script type="text/javascript" charset="utf-8">
+  (function (g, e, n, es, ys) {
+    g['_genesysJs'] = e;
+    g[e] = g[e] || function () {
+      (g[e].q = g[e].q || []).push(arguments)
+    };
+    g[e].t = 1 * new Date();
+    g[e].c = es;
+    ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
+  })(window, 'Genesys', 'https://apps.mypurecloud.de/genesys-bootstrap/genesys.min.js', {
+    environment: 'prod-euc1',
+    //English
+    //deploymentId: '8830f3ca-dc62-4210-8ad6-a788284e4968'
+    //Arabic Paragraph
+    deploymentId: '21d8b1f2-0ff4-4e4b-947b-ed49de2fd36f'
+  });
+</script>
+  
+</head>
+<body>
+  <!-- Genesys widget will load here -->
+  <div id="genesys-support-center"></div>
+  
+  <script>
+    function showMessage() {
+      console.log('Button was clicked!');
+      alert('Thanks for clicking!');
+    }
+  </script>
+
+  <script>
+    Genesys("subscribe", "Messenger.ready", function () {
+    
+      const observer = new MutationObserver(() => {
+        document.querySelectorAll(".cx-message-text a").forEach(link => {
+          const url = link.href;
+    
+          // Detect YouTube embed links
+          if (url.includes("youtube.com/embed")) {
+    
+            // Extract video ID even if double slash exists
+            const match = url.match(/embed\/+([^?]+)/);
+            if (!match) return;
+    
+            const videoId = match[1];
+    
+            // Create iframe
+            const iframe = document.createElement("iframe");
+            iframe.width = "300";
+            iframe.height = "180";
+            iframe.src = `https://www.youtube.com/embed/${videoId}`;
+            iframe.frameBorder = "0";
+            iframe.allowFullscreen = true;
+    
+            // Replace link with iframe
+            link.replaceWith(iframe);
+          }
+        });
+      });
+    
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    
+    });
+  </script>
+
+
+</body>
+</html>
