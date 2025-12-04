@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QiBot</title>
+
+  <!-- Genesys loader -->
+  <script type="text/javascript" charset="utf-8">
+    (function (g, e, n, es, ys) {
+      g['_genesysJs'] = e;
+      g[e] = g[e] || function () {
+        (g[e].q = g[e].q || []).push(arguments)
+      };
+      g[e].t = 1 * new Date();
+      g[e].c = es;
+      ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
+    })(window, 'Genesys', 'https://apps.mypurecloud.de/genesys-bootstrap/genesys.min.js', {
+      environment: 'prod-euc1',
+      deploymentId: '21d8b1f2-0ff4-4e4b-947b-ed49de2fd36f'
+    });
+  </script>
+</head>
+
+<body>
+
+  <div id="genesys-support-center"></div>
+
+  <!-- REAL WORKING SCRIPT -->
+  <script>
+    Genesys("subscribe", "Messenger.ready", function () {
+
+      // Listen to ALL incoming messages from Genesys
+      Genesys("subscribe", "MessagingService.messagesReceived", function (response) {
+
+        const msgs = response.messages || [];
+
+        msgs.forEach(msg => {
+
+          if (!msg.text) return;
+
+          // Detect YouTube embed link in the message text
+          if (msg.text.includes("youtube.com/embed")) {
+
+            const match = msg.text.match(/embed\/+([^?]+)/);
+            if (!match) return;
+
+            const videoId = match[1];
+
+            // Wait for Genesys to render the bubble inside shadow DOM
+            setTimeout(() => {
+              insertYouTubeIframe(videoId);
+            }, 120);
+          }
+        });
+      });
+
+    });
+
+
+    // Insert iframe inside Genesys Messenger shadow DOM
+    function insertYouTubeIframe(videoId) {
+
+      // Messenger is inside an iframe with an open shadowRoot
+      const messengerFrame = document.querySelector("iframe[src*='genesys']");
+      if (!messengerFrame) return;
+
+      const shadow = messengerFrame.shadowRoot;
+      if (!shadow) return;
+
+      // Genesys message bubbles live inside nested iframe
+      const innerFrame = shadow.querySelector("iframe");
+      if (!innerFrame) return;
+
+      const innerShadow = innerFrame.contentDocument || innerFrame.contentWindow.document;
+      if (!innerShadow) return;
+
+      // Find all bot message bubbles
+      const bubbles = innerShadow.querySelectorAll(".cx-message-text, .bubble .text");
+
+      bubbles.forEach(b => {
+        const html = b.innerHTML;
+
+        if (html.includes("youtube.com/embed")) {
+
+          // Create iframe
+          const iframe = document.createElement("iframe");
+          iframe.width = "300";
+          iframe.height = "180";
+          iframe.src = `https://www.youtube.com/embed/${videoId}`;
+          iframe.frameBorder = "0";
+          iframe.allowFullscreen = true;
+
+          b.innerHTML = "";
+          b.appendChild(iframe);
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
