@@ -35,45 +35,41 @@
   </script>
 
   <script>
-    Genesys("subscribe", "Messenger.ready", function () {
-      alert('yeni script');
-      const observer = new MutationObserver(() => {
-        document.querySelectorAll("a[href*='youtube.com']").forEach(link => {
-          const url = link.href;
-          alert('url aldım: ' + url);
-          // Detect YouTube embed links
-          if (url.includes("youtube.com/embed")) {
-            alert('urlin içinde youtube var');
-            // Extract video ID even if double slash exists
-            const match = url.match(/embed\/+([^?]+)/);
-            alert('matchi aldim: ' + match);
-            
-            if (!match) return;
-    
-            const videoId = match[1];
-            alert('videoId: ' + videoId);
-            
-            // Create iframe
-            const iframe = document.createElement("iframe");
-            iframe.width = "300";
-            iframe.height = "180";
-            iframe.src = `https://www.youtube.com/embed/${videoId}`;
-            iframe.frameBorder = "0";
-            iframe.allowFullscreen = true;
-    
-            // Replace link with iframe
-            link.replaceWith(iframe);
-          }
+      Genesys("subscribe", "Messenger.ready", function () {
+        alert('yeni script');
+        // This fires EVERY TIME a bot or agent sends a message
+        Genesys("subscribe", "MessagingService.messagesReceived", function (response) {
+          alert('messages received event');
+          // Delay to allow Genesys to render the message
+          setTimeout(() => {
+            document.querySelectorAll("a").forEach(link => {
+              const url = link.href;
+              alert('url aldım: ' + url);
+              if (url.includes("youtube.com/embed")) {
+                alert('urlin içinde youtube var');
+                const match = url.match(/embed\/+([^?]+)/);
+                alert('matchi aldim: ' + match);
+                if (!match) return;
+      
+                const videoId = match[1];
+                alert('videoId: ' + videoId);
+                const iframe = document.createElement("iframe");
+                iframe.width = "300";
+                iframe.height = "180";
+                iframe.src = `https://www.youtube.com/embed/${videoId}`;
+                iframe.frameBorder = "0";
+                iframe.allowFullscreen = true;
+      
+                link.replaceWith(iframe);
+              }
+            });
+          }, 50); // Give the widget time to update DOM
         });
+      
       });
-    
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true
-      });
-    
-    });
-  </script>
+      </script>
+
+  
 
 
 </body>
