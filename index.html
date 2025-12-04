@@ -29,61 +29,50 @@
     // Function to insert iframe inside Genesys Messenger shadow DOM
 function insertYouTubeIframe() {
 
-  // 1. Messenger is inside an iframe with an open shadowRoot
-  // Use attribute selectors for robustness
-  const messengerFrame = document.querySelector("iframe[id*='gcm-messenger-frame']");
+  // 1. Target the Genesys iframe using its known ID or a highly specific selector
+  const messengerFrame = document.getElementById('gcm-messenger-frame'); 
+  // If the ID isn't used, try the source attribute:
+  // const messengerFrame = document.querySelector("iframe[src*='genesys']"); 
+  
   if (!messengerFrame || !messengerFrame.shadowRoot) {
-    console.error("Genesys Messenger iframe or shadowRoot not found.");
+    console.warn("Genesys Messenger iframe or shadowRoot not found.");
     return;
   }
 
   const shadow = messengerFrame.shadowRoot;
 
-  // 2. Genesys message bubbles live inside a nested iframe.
-  // This is the common failure point due to Same-Origin Policy.
-  // We must try to get the inner document.
-  const innerFrame = shadow.querySelector("iframe[src*='messaging']");
+  // 2. Access the nested iframe (where chat content lives)
+  // Use a more specific selector if possible, e.g., targeting the source path
+  const innerFrame = shadow.querySelector("iframe[src*='messaging']"); 
   if (!innerFrame) {
-    console.warn("Inner iframe not found. Messenger may not be fully loaded.");
+    console.warn("Inner content iframe not found.");
     return;
   }
 
-  // Check for Same-Origin Policy block before continuing
+  // 3. Attempt to get the inner document (This is the Same-Origin Policy choke point)
   let innerDoc;
   try {
-    // This line is often the source of the SecurityError
     innerDoc = innerFrame.contentDocument || innerFrame.contentWindow.document;
   } catch (e) {
-    console.error("ContentDocument access denied (Same-Origin Policy likely):", e);
-    // If blocked, we cannot proceed with this method.
+    console.error("ContentDocument access blocked (SecurityError/Same-Origin Policy). Direct DOM manipulation across frames is prohibited.", e);
+    // **If this fails, the current approach is impossible.**
     return; 
   }
 
-  if (!innerDoc) {
-    console.warn("Inner document is not accessible.");
-    return;
-  }
-
-  // 3. Find all bot message bubbles that contain text (not just attachments/cards)
-  // Use a reliable selector for the text content container.
+  // 4. Find all bot message bubbles and replace content
   const bubbles = innerDoc.querySelectorAll(".cx-message-text, .bubble .text");
 
   bubbles.forEach(b => {
     const html = b.innerHTML;
 
-    // A. Check if the bubble already has an iframe (to prevent double-embedding)
-    if (b.querySelector('iframe')) return; 
+    if (b.querySelector('iframe')) return; // Avoid re-embedding
 
-    // B. Check for the YouTube embed link in the bubble's content
     if (html.includes("youtube.com/embed")) {
-
-      // C. Extract the video ID from the HTML content of THIS SPECIFIC BUBBLE
       const match = html.match(/embed\/([^?"]+)/);
       if (!match) return;
 
       const videoId = match[1];
 
-      // D. Create the iframe
       const iframe = document.createElement("iframe");
       iframe.width = "300";
       iframe.height = "180";
@@ -92,25 +81,28 @@ function insertYouTubeIframe() {
       iframe.allowFullscreen = true;
       iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
 
-      // E. Replace the content
-      b.innerHTML = ""; // Clear the text link
-      b.appendChild(iframe); // Insert the video
+      b.innerHTML = "";
+      b.appendChild(iframe);
     }
   });
 }
 
-// --- Genesys SDK Listener ---
+// --- Combined Listener ---
+// Use the 'Messenger.ready' event as the starting point for all logic
 Genesys("subscribe", "Messenger.ready", function () {
   
-  // Listen to ALL incoming messages from Genesys
+  // 1. Listen for new messages
   Genesys("subscribe", "MessagingService.messagesReceived", function (response) {
     
-    // Set a small delay to ensure the DOM has been updated by the Genesys renderer
-    setTimeout(() => {
-      // Call the function without passing a videoId
-      insertYouTubeIframe(); 
-    }, 120); 
+    // 2. Wait a moment for the new message to be rendered in the Shadow DOM structure
+    setTimeout(insertYouTubeIframe, 150); // Increased delay slightly
     
+  });
+  
+  // **Crucial Addition: Also check on 'Messenger.opened' in case the messenger was already loaded but closed**
+  Genesys("subscribe", "Messenger.opened", function () {
+    // Also run the check when the widget is opened/re-opened
+    setTimeout(insertYouTubeIframe, 150); 
   });
 });
   </script>
